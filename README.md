@@ -1,3 +1,3 @@
-# Run local Kafka with Docker Compose
+# Run local Flink with Docker Compose
 
 TODO
