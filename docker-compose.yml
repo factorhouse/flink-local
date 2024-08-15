@@ -1,0 +1,31 @@
+services:
+
+  jobmanager:
+    image: flink:latest
+    ports:
+      - "8081:8081"
+    command: jobmanager
+    environment:
+      - |
+        FLINK_PROPERTIES=
+        jobmanager.rpc.address: jobmanager        
+
+  sql-gateway:
+    image: flink:latest
+    ports:
+      - "8083:8083"
+    depends_on:
+      - jobmanager
+    command: /opt/flink/bin/sql-gateway.sh start -Dsql-gateway.endpoint.rest.address=jobmanager
+
+  taskmanager:
+    image: flink:latest
+    depends_on:
+      - jobmanager
+    command: taskmanager
+    scale: 1
+    environment:
+      - |
+        FLINK_PROPERTIES=
+        jobmanager.rpc.address: jobmanager
+        taskmanager.numberOfTaskSlots: 10
